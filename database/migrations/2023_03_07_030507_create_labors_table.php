@@ -13,15 +13,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('fields', function (Blueprint $table) {
+        Schema::create('labors', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('field_id');
             $table->string('name');
-            $table->string('location');
-            $table->string('size')->default('medium');
+            $table->integer('labor_cost');
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
+                ->onDelete('cascade');
+            $table->foreign('field_id')
+                ->references('id')
+                ->on('fields')
                 ->onDelete('cascade');
             $table->timestamps();
         });
@@ -32,7 +36,8 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down(){
-        Schema::dropIfExists('fields');
+    public function down()
+    {
+        Schema::dropIfExists('labors');
     }
 };

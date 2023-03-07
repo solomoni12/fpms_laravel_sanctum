@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('fields', function (Blueprint $table) {
+        Schema::create('equipment', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('name');
-            $table->string('location');
-            $table->string('size')->default('medium');
+            $table->integer('equipment_cost');
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
@@ -32,7 +31,8 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down(){
-        Schema::dropIfExists('fields');
+    public function down()
+    {
+        Schema::dropIfExists('equipment');
     }
 };

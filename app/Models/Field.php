@@ -16,4 +16,20 @@ class Field extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    public function labor(){
+        return $this->hasMany(Labor::class);
+    }
+
+    public function crop(){
+        return $this->hasMany(Crop::class);
+    }
+
+    public function cost(){
+        return $this->hasMany(Cost::class);
+    }
+
+    public function product(){
+        return $this->hasMany(Product::class);
+    }
 }
