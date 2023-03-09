@@ -1,12 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Http\Requests\StoreFieldRequest;
+use App\Models\Crop;
+use App\Models\User;
 use App\Models\Field;
-use App\Traits\HttpResponses;
-use App\Http\Resources\FieldsResource;
 use Illuminate\Http\Request;
+use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\FieldsResource;
+use App\Http\Requests\StoreFieldRequest;
 
 class FieldController extends Controller
 {
@@ -21,6 +23,9 @@ class FieldController extends Controller
     {
         return FieldsResource::collection(
             Field::where('user_id', Auth::user()->id)->get()
+        );
+        return CropResource::collection(
+            Crop::where('field_id', Auth::user()->id)->get()
         );
     }
 
@@ -55,6 +60,22 @@ class FieldController extends Controller
 
        return $this->isNotAuthorized($field) ? $this->isNotAuthorized($field) : new FieldsResource($field);
     }
+
+    //display the crop via field
+    public function userFieldCrop($id){
+
+        $user = User::find($id);
+        $crop = Crop::find($id);
+        $field = Field::find($id);
+
+        return $this->success([
+            'crop' => $crop,
+            'field' => $field,
+            'user' => $user,
+            'token'=>$user->createToken('API token of' . $user->name)->plainTextToken
+        ]);
+    }
+
 
     /**
      * Update the specified resource in storage.

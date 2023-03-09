@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\LoginUserRequest;
+use App\Models\Crop;
 use App\Models\User;
-use App\Traits\HttpResponses;
+use App\Models\Field;
 use Illuminate\Http\Request;
-use Illuminate\Support\facades\Hash;
+use App\Http\Requests\UserCropRequest;
+use App\Traits\HttpResponses;
+use App\Http\Resources\CropResource;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\facades\Hash;
+use App\Http\Requests\LoginUserRequest;
+use App\Http\Requests\StoreUserRequest;
 
 class AuthController extends Controller
 {
@@ -43,7 +47,26 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $user->createToken('API token of' . $user->name)->plainTextToken
         ]);
+
     }
+
+    // public function userFieldCrop($id){
+
+    //     $user = User::find($id);
+    //     $crop = Crop::find($id);
+    //     $field = Field::find($id);
+        
+    //     // if(Auth::field()->id !== $crop->field_id){
+    //     //     return $this->error('','You are not Authorized to make request',403);
+    //     // }
+
+    //     return $this->success([
+    //         'crop' => $crop,
+    //         'field' => $field,
+    //         'user' => $user,
+    //         'token'=>$user->createToken('API token of' . $user->name)->plainTextToken
+    //     ]);
+    // }
 
     public function logout(){
         

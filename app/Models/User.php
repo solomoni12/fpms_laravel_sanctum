@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Crop;
 use App\Models\Field;
 use App\Models\Labor;
 use Laravel\Sanctum\HasApiTokens;
@@ -35,6 +36,10 @@ class User extends Authenticatable
 
     public function equipment(){
         return $this->hasMany(Equipment::class);
+    }
+
+    public function crop(){
+        return $this->hasManyThrough(Crop::class, Field::class);
     }
 
     /**
