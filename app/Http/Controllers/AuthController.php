@@ -33,6 +33,31 @@ class AuthController extends Controller
         ]);
     }
 
+    public function logged_user(){
+        $logged_user = auth()->user();
+
+        return $this->success([
+            'user' => $logged_user,
+            'message' => 'logged user'
+        ]);
+    }
+
+    public function change_password(LoginUserRequest $request){
+
+        $request -> validated([
+            'email' => 'required',
+            'password'=> 'required|confirmed',
+        ]);
+        $logged_user = auth()->user(); 
+        $logged_user -> password = Hash::make($request->password);
+        $logged_user -> save();
+
+        return $this->success([
+            'user' => $logged_user,
+            'message' => 'password changed'
+        ]);
+    }
+
     public function register(StoreUserRequest $request){
        
         $request->validated($request->all());   

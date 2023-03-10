@@ -63,7 +63,7 @@ class FieldController extends Controller
 
     //display the crop via field
     public function userFieldCrop($id){
-
+        
         $user = User::find($id);
         $crop = Crop::find($id);
         $field = Field::find($id);
