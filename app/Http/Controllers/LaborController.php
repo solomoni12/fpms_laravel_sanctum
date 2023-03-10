@@ -67,9 +67,9 @@ class LaborController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Labor $labor)
     {
-        //
+        return $this->isNotAuthorized($labor) ? $this->isNotAuthorized($labor) : new LaborResource($labor);
     }
 
     /**
@@ -90,9 +90,14 @@ class LaborController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Labor $labor)
     {
-        //
+        if(Auth::user()->id !== $labor->user_id){
+            return $this->error('','You are not Authorized to make request',403);
+        }
+        $labor->update($request->all());
+
+        return new LaborResource($labor);
     }
 
     /**
@@ -101,8 +106,15 @@ class LaborController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Labor $labor)
     {
-        //
+        return $this->isNotAuthorized($labor) ? $this->isNotAuthorized($labor) : $labor -> delete();
+    }
+
+    private function isNotAuthorized($labor){
+         
+        if(Auth::user()->id !== $labor->user_id){
+            return $this->error('','You are not Authorized to make request',403);
+        }
     }
 }

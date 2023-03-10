@@ -64,6 +64,10 @@ class FieldController extends Controller
     //display the crop via field
     public function userFieldCrop($id){
         
+        if (Auth::user()->id != $id) {
+            return $this->error('','You are not Authorized to make request',403);
+        }
+        
         $user = User::find($id);
         $crop = Crop::find($id);
         $field = Field::find($id);
