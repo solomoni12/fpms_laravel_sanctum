@@ -14,6 +14,24 @@ class LaborResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => (string)$this->id,
+            'attributes' => [
+                'name'=> $this->name,
+                'labor_cost' => $this->labor_cost,
+                'created_at' => $this->created_at,
+                'updated_at' => $this->updated_at
+            ],
+            'relationships'=>[
+                'id' => (string)$this->user->id,
+                'user name' => $this->user->name,
+                'user email'=> $this->user->email
+            ],
+            'relationship_field'=>[
+                'id' => (string)$this->field->id,
+                'field location' => $this->field->location,
+                'field size' => $this->field->size
+            ]
+        ];
     }
 }

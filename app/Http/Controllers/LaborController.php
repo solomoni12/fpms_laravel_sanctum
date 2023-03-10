@@ -2,10 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Field;
+use App\Models\Labor;
 use Illuminate\Http\Request;
+use App\Traits\HttpResponses;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\LaborResource;
+use App\Http\Requests\StoreLaborRequest;
 
 class LaborController extends Controller
 {
+
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +21,12 @@ class LaborController extends Controller
      */
     public function index()
     {
-        //
+        return LaborResource::collection(
+            Labor::where('user_id', Auth::user()->id)->get()
+        );
+        return FieldResource::collection(
+            Field::where('user_id', Auth::user()->id)-get()
+        );
     }
 
     /**
@@ -32,9 +45,20 @@ class LaborController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreLaborRequest $request)
     {
-        //
+        $request->validated($request->all());
+
+        // fetch field data
+        $field = Field::all()->random()->id;
+
+        $labor = Labor::create([
+            'user_id' => Auth::user()->id,
+            'field_id' => $field,
+            'name' => $request->name,
+            'labor_cost' => $request->labor_cost
+        ]);
+        return new LaborResource($labor);
     }
 
     /**
