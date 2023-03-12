@@ -18,6 +18,7 @@ class AuthController extends Controller
 {
     use HttpResponses;
 
+    // Function to user login
     public function login(LoginUserRequest $request){
 
         $request->validated($request->all());  
@@ -33,6 +34,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // Function to find logged user
     public function logged_user(){
         $logged_user = auth()->user();
 
@@ -42,6 +44,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // Function to change password of user
     public function change_password(LoginUserRequest $request){
 
         $request -> validated([
@@ -58,6 +61,7 @@ class AuthController extends Controller
         ]);
     }
 
+    // function to register user
     public function register(StoreUserRequest $request){
        
         $request->validated($request->all());   
@@ -75,24 +79,7 @@ class AuthController extends Controller
 
     }
 
-    // public function userFieldCrop($id){
-
-    //     $user = User::find($id);
-    //     $crop = Crop::find($id);
-    //     $field = Field::find($id);
-        
-    //     // if(Auth::field()->id !== $crop->field_id){
-    //     //     return $this->error('','You are not Authorized to make request',403);
-    //     // }
-
-    //     return $this->success([
-    //         'crop' => $crop,
-    //         'field' => $field,
-    //         'user' => $user,
-    //         'token'=>$user->createToken('API token of' . $user->name)->plainTextToken
-    //     ]);
-    // }
-
+    // user logout function
     public function logout(){
         
         Auth::user()->currentAccessToken()->delete();

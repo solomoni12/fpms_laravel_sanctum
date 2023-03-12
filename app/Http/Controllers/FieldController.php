@@ -7,12 +7,18 @@ use App\Models\Field;
 use Illuminate\Http\Request;
 use App\Traits\HttpResponses;
 use Illuminate\Support\Facades\Auth;
+use App\Middleware\CheckMiddleware;
 use App\Http\Resources\FieldsResource;
 use App\Http\Requests\StoreFieldRequest;
 
 class FieldController extends Controller
 {
     use HttpResponses;
+
+    // constructor to call middleware request
+    //  public function __construct(){
+    //    $this->middleware('is-active');
+    // }
 
     /**
      * Display a listing of the resource.
@@ -64,9 +70,9 @@ class FieldController extends Controller
     //display the crop via field
     public function userFieldCrop($id){
         
-        if (Auth::user()->id != $id) {
-            return $this->error('','You are not Authorized to make request',403);
-        }
+         if (Auth::user()->id != $id) {
+             return $this->error('','You are not Authorized to make request',403);
+         }
         
         $user = User::find($id);
         $crop = Crop::find($id);
@@ -76,7 +82,7 @@ class FieldController extends Controller
             'crop' => $crop,
             'field' => $field,
             'user' => $user,
-            'token'=>$user->createToken('API token of' . $user->name)->plainTextToken
+            // 'token'=>$user->createToken('API token of' . $user->name)->plainTextToken
         ]);
     }
 

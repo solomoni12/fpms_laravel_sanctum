@@ -20,6 +20,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/send-reset-password-email', [PasswordResetController::class, 'send_reset_password_email']);
 
+// ->middleware(['is-active'])
 // protected route
 Route::group(['middleware' => ['auth:sanctum']], function (){
 
