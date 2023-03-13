@@ -29,11 +29,11 @@ class CropResource extends JsonResource
                 'location'=> $this->field->location,
                 'size' => $this->field->size
             ],
-            'relationships user' =>[
-                'id' => (string)$this->user->id,
-                'user name' => $this->user->name,
-                'user email' => $this->user->email
-            ]
+            // 'relationships user' =>[
+            //     'id' => (string)$this->user->id,
+            //     'user name' => $this->user->name,
+            //     'user email' => $this->user->email
+            // ]
         ];
     }
 }

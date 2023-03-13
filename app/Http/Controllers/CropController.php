@@ -22,11 +22,7 @@ class CropController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return FieldsResource::collection(
-            Field::where('user_id', Auth::user()->id)->get()
-        );
+    public function index(){
         return CropResource::collection(
             Crop::where('field_id', Auth::user()->id)->get()
         );
@@ -96,9 +92,14 @@ class CropController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Crop $crop)
     {
-        //
+        if(Auth::user()->id !== $crop->field_id){
+            return $this->error('','You are not Authorized to make request',403);
+        }
+        $crop->update($request->all());
+
+        return new CropResource($crop);
     }
 
     /**
@@ -110,5 +111,12 @@ class CropController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function isNotAuthorized($field){
+         
+        if(Auth::user()->id !== $field->user_id){
+            return $this->error('','You are not Authorized to make request',403);
+        }
     }
 }
