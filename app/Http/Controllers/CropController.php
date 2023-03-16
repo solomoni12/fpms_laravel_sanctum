@@ -48,13 +48,16 @@ class CropController extends Controller
      */
     public function store(StoreCropRequest $request) {
         
+        // if(Auth::user()->id != )
         $request->validated($request->all());
+        
 
         // fetch  data
-        $field = Field::all()->random()->id;
+        // $field = Field::all()->id;
+        // Auth::user()->id
 
         $crop = Crop::create([
-            'field_id' => $field,
+            'field_id' => $request -> field_id,
             'crop_type' => $request -> crop_type,
             'planting_date' => $request -> planting_date,
             'harvest_date' => $request->harvest_date
@@ -69,9 +72,9 @@ class CropController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Crop $crop)
     {
-        //
+        return $this->isNotAuthorized($crop) ? $this->isNotAuthorized($crop) : new CropResource($crop);
     }
 
     /**
@@ -108,14 +111,14 @@ class CropController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Crop $crop)
     {
-        //
+        return $this->isNotAuthorized($crop) ? $this->isNotAuthorized($crop) : $crop -> delete();
     }
 
-    private function isNotAuthorized($field){
+    private function isNotAuthorized($crop){
          
-        if(Auth::user()->id !== $field->user_id){
+        if(Auth::user()->id !== $crop->field_id){
             return $this->error('','You are not Authorized to make request',403);
         }
     }

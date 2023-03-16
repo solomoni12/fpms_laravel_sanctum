@@ -15,14 +15,13 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('crop_id');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('field_id');
             $table->string('name');
-            $table->integer('price')->default(0);
-            $table->integer('unit')->default(0);
-            $table->foreign('crop_id')
+            $table->integer('quantity')->default(0);
+            $table->foreign('user_id')
                 ->references('id')
-                ->on('crops')
+                ->on('users')
                 ->onDelete('cascade');
             $table->foreign('field_id')
                 ->references('id')

@@ -2,10 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Equipment;
 use Illuminate\Http\Request;
+use App\Traits\HttpResponses;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\EquipmentResource;
+use App\Http\Requests\StoreEquipmentRequest;
 
 class EquipmentController extends Controller
 {
+    use HttpResponses;
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +20,9 @@ class EquipmentController extends Controller
      */
     public function index()
     {
-        //
+        return EquipmentResource::collection(
+            Equipment::where('user_id', Auth::user()->id)->get()
+        );
     }
 
     /**
@@ -32,9 +41,16 @@ class EquipmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreEquipmentRequest $request)
     {
-        //
+        $request->validated($request->all());
+
+        $equipment = Equipment::create([
+            'user_id' => Auth::user()->id,
+            'name' => $request->name,
+            'equipment_cost' => $request->equipment_cost
+        ]);
+        return new EquipmentResource($equipment);
     }
 
     /**
@@ -43,9 +59,9 @@ class EquipmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Equipment $equipment)
     {
-        //
+        return $this->isNotAuthorized($equipment) ? $this->isNotAuthorized($equipment) : new EquipmentResource($equipment);
     }
 
     /**
@@ -66,9 +82,15 @@ class EquipmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Equipment $equipment)
     {
-        //
+        if(Auth::user()->id !== $equipment->user_id){
+            return $this->error('','You are not Authorized to make request',403);
+        }
+
+        $equipment->update($request->all());
+
+        return new EquipmentResource($equipment);
     }
 
     /**
@@ -77,8 +99,14 @@ class EquipmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy(Equipment $equipment){
+        return $this->isNotAuthorized($equipment) ? $this->isNotAuthorized($equipment) : $equipment -> delete();
+    }
+
+    private function isNotAuthorized($equipment){
+         
+        if(Auth::user()->id !== $equipment->user_id){
+            return $this->error('','You are not Authorized to make request',403);
+        }
     }
 }

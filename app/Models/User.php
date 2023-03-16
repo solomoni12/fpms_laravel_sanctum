@@ -38,6 +38,10 @@ class User extends Authenticatable
         return $this->hasMany(Equipment::class);
     }
 
+    public function product(){
+        return $this->hasMany(Product::class);
+    }
+
     public function crop(){
         return $this->hasManyThrough(Crop::class, Field::class);
     }

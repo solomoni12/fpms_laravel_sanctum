@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCropRequest extends FormRequest
+class StoreProductRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,8 @@ class StoreCropRequest extends FormRequest
     public function rules()
     {
         return [
-            'field_id' => ['required'],
-             'crop_type' => ['required', 'max:255'],
-             'planting_date' => ['required'],
-             'harvest_date' => ['required']
+            'name' => ['required', 'max:255'],
+            'quantity' => ['required']
         ];
     }
 }

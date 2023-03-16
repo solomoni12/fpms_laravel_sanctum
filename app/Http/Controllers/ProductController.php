@@ -2,18 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Crop;
+use App\Models\Field;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Traits\HttpResponses;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\ProductResource;
+use App\Http\Requests\StoreProductRequest;
 
 class ProductController extends Controller
 {
+    use HttpResponses;
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index(){
+
+        return ProductResource::collection(
+            Product::where('user_id', Auth::user()->id)->get()
+        );
+
+      /* return ProductResource::collection(
+            Field::where('user_id', Auth::user()->id)->get(),
+            Product::where('field_id', Field::all()->random()->id && 'crop_id', Crop::all()->random()->id)->get()
+       );
+        */
     }
 
     /**
@@ -21,8 +38,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create(){
         //
     }
 
@@ -32,9 +48,19 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
+    public function store(StoreProductRequest $request){
+
+       $request -> validated($request->all());
+       $field = Field::all()->random()->id;
+
+       $product = Product::create([
+            'field_id' => $field,
+            'user_id' => Auth::user()->id,
+            'name' => $request->name,
+            'quantity' => $request->quantity
+        ]);
+
+         return new ProductResource($product);
     }
 
     /**

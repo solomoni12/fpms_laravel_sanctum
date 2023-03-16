@@ -17,7 +17,9 @@ class Crop extends Model
         return $this->belongsTo(Field::class);
     }
 
+   /* 
     public function product(){
         return $this->hasMany(Product::class);
     }
+    */
 }
