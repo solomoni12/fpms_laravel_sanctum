@@ -28,6 +28,11 @@ class ProductResource extends JsonResource
                     'id' => (string)$this->user->id,
                      'user name' => $this->user->name,
                    'user email'=> $this->user->email
+                 ],
+                 'relationships field'=>[
+                    'id' => (string)$this->field->id,
+                    'field name' => $this->field->name,
+                   'field location'=> $this->field->location
                  ]
             ];
         

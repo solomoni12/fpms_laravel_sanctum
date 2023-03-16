@@ -69,9 +69,8 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show(Product $product){
+        return $this->isNotAuthorized($product) ? $this->isNotAuthorized($product) : new ProductResource($product);
     }
 
     /**
@@ -92,9 +91,16 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, Product $product) {
+        
+        if(Auth::user()->id !== $product->user_id){
+            return $this->error('','You are not Authorized to make request',403);
+        }
+
+        $product->update($request->all());
+
+        return new ProductResource($product);
+        
     }
 
     /**
@@ -103,8 +109,15 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        //
+        return $this->isNotAuthorized($product) ? $this->isNotAuthorized($product) : $product -> delete();
+    }
+
+    private function isNotAuthorized($product){
+         
+        if(Auth::user()->id !== $product->user_id){
+            return $this->error('','You are not Authorized to make request',403);
+        }
     }
 }
