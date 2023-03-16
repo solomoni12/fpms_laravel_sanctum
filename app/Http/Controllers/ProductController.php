@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Crop;
 use App\Models\Field;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -25,12 +24,6 @@ class ProductController extends Controller
         return ProductResource::collection(
             Product::where('user_id', Auth::user()->id)->get()
         );
-
-      /* return ProductResource::collection(
-            Field::where('user_id', Auth::user()->id)->get(),
-            Product::where('field_id', Field::all()->random()->id && 'crop_id', Crop::all()->random()->id)->get()
-       );
-        */
     }
 
     /**
@@ -114,6 +107,7 @@ class ProductController extends Controller
         return $this->isNotAuthorized($product) ? $this->isNotAuthorized($product) : $product -> delete();
     }
 
+    // Authorization function
     private function isNotAuthorized($product){
          
         if(Auth::user()->id !== $product->user_id){
